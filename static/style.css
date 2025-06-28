@@ -1,0 +1,35 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+h1 {
+  color: #38bdf8;
+}
+.chatbox {
+  width: 100%;
+  max-width: 600px;
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 10px;
+}
+.messages {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+}
+.messages div {
+  margin: 10px 0;
+}
+.user { color: #facc15; }
+.bot { color: #22d3ee; }
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1em;
+}

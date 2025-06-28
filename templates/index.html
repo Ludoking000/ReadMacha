@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReadMAcHA - Career & Study Chatbot</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    h1 {
+      color: #38bdf8;
+      margin-bottom: 20px;
+      font-size: 2rem;
+    }
+    .chatbox {
+      width: 100%;
+      max-width: 700px;
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+    }
+    .messages {
+      flex-grow: 1;
+      max-height: 500px;
+      overflow-y: auto;
+      margin-bottom: 15px;
+      padding-right: 10px;
+    }
+    .messages div {
+      margin: 10px 0;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .user {
+      color: #facc15;
+    }
+    .bot {
+      color: #38f3ff;
+      background-color: #0f172a;
+      padding: 10px;
+      border-left: 3px solid #22d3ee;
+      border-radius: 5px;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1em;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>ReadMAcHA 🧠💬</h1>
+  <div class="chatbox">
+    <div class="messages" id="chatLog"></div>
+    <input type="text" id="userInput" placeholder="Ask me anything, macha..." />
+  </div>
+
+  <script>
+    const chatLog = document.getElementById('chatLog');
+    const userInput = document.getElementById('userInput');
+
+    async function askReadMAcHA(question) {
+      const response = await fetch('https://api.cohere.ai/v1/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer lgMrg5O2nQdQBuJtWPMtdoD4tqJpQZNuLMJCnRwF'
+        },
+        body: JSON.stringify({
+          model: 'command-r-plus',
+          prompt: `You are ReadMAcHA, a cool Indian bro-style chatbot. Help students with career, exams, and studies. Be informal like 'macha', 'yo bro' but accurate.\nStudent: ${question}\nReadMAcHA:`,
+          temperature: 0.8,
+          max_tokens: 300
+        })
+      });
+
+      const data = await response.json();
+      console.log("🔍 API Response:", data);
+      return data.generations?.[0]?.text?.trim().replace(/\n/g, "<br>") || "Sorry macha, no reply came through.";
+    }
+
+    userInput.addEventListener('keydown', async function (e) {
+      if (e.key === 'Enter' && userInput.value.trim() !== '') {
+        const question = userInput.value;
+        chatLog.innerHTML += `<div class='user'><strong>You:</strong> ${question}</div>`;
+        userInput.value = '...';
+
+        const answer = await askReadMAcHA(question);
+        chatLog.innerHTML += `<div class='bot'><strong>ReadMAcHA:</strong><br>${answer}</div>`;
+        userInput.value = '';
+        chatLog.scrollTop = chatLog.scrollHeight;
+      }
+    });
+  </script>
+</body>
+</html>
